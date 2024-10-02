@@ -5,3 +5,7 @@ html {
 * {
     box-sizing: inherit;
 }
+
+canvas {
+    background-color: red;
+}
