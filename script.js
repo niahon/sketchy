@@ -1,17 +1,36 @@
+"use strict"
+
 const elCanvas = document.querySelector("canvas");
-const ctx = elCanvas.getContext("2d");
+const flex = document.querySelector(".flex");
+elCanvas.width = window.innerWidth;
+elCanvas.height = window.innerHeight * 0.9;
 
-elCanvas.width = window.innerWidth
-elCanvas.height = window.innerHeight;
+if (elCanvas.getContext) {
+    const ctx = elCanvas.getContext("2d");
+    const canvasLimit = elCanvas.getBoundingClientRect();
 
-window.addEventListener("pointerdown", () => {
-    elCanvas.addEventListener("pointermove", linePath);
-})
-window.addEventListener("pointerup", () => {
-    elCanvas.removeEventListener("pointermove", linePath);
-})
+    
+    elCanvas.addEventListener("pointerdown", startLine);
+    elCanvas.addEventListener("pointerup", () => {
+        elCanvas.removeEventListener("pointermove", updateLine);
+    });     
+    
+    function startLine(e) {
+        ctx.beginPath();
+        ctx.moveTo(e.pageX, e.pageY - canvasLimit.y);
+        elCanvas.addEventListener("pointermove", updateLine);
+        /* 
+        ctx.quadraticCurveTo(e.clientX, e.clientY, 20, 20) */
+    }
 
-function linePath(e) {
-    console.log(e.clientX);
-    console.log(e.clientY);
+    function updateLine(e) {
+        ctx.lineTo(e.pageX, e.pageY - canvasLimit.y);
+        ctx.closePath;
+        ctx.stroke();
+    }
+
+}
+
+else {
+    console.log("Canvas not supported");
 }
