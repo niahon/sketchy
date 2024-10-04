@@ -13,5 +13,6 @@
 
 
 ## BUGS  
--Canvas is overflowing to the right  
+-Position of pointer is off
+--Grab width of first column and distance from start of second column to start of centered canvas  
 -When user reloads page, coordinates are all off  
