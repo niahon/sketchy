@@ -2,8 +2,8 @@
 
 const elCanvas = document.querySelector("canvas");
 const flex = document.querySelector(".flex");
-elCanvas.width = window.innerWidth;
-elCanvas.height = window.innerHeight * 0.9;
+elCanvas.width = window.innerWidth * 0.8;
+elCanvas.height = window.innerHeight * 0.8;
 
 if (elCanvas.getContext) {
     const ctx = elCanvas.getContext("2d");

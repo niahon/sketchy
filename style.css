@@ -11,14 +11,26 @@ body {
     margin: 0;
 }
 
-.toolbar {
-    padding: 1rem;
-    border-right: 2px solid black;
-    border-left: 2px solid black;
-    border-top: 2px solid black;
+.grid {
+    display: grid;
+    grid-template-columns: 0.5fr 10fr 0.5fr;
+    grid-template-rows: auto;
+    background-color: aqua;
 }
+    #tool-settings {
+        grid-column: 1 / 4;
+        background-color: green;
+    }
 
-canvas {
-    border: 2px solid black;
-    display: block;
-}
+    #toolbar {
+        padding: 1rem;
+        border-bottom: 1px solid black;
+        grid-column: 1 / 2;
+        background-color: blue;
+    }
+
+    canvas {
+        background-color: red;
+        grid-column: 2 / 3;
+        margin: 0 auto;
+    }
