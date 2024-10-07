@@ -29,14 +29,29 @@ body {
         flex-direction: column;
         align-items: center;
         background-color: blue;
+        gap: 0.75rem;
     }
+        button {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 25%;
+
+        }
+            .button-img {
+                width: 80%;
+            }
+            #color {
+                background-color: black;
+                border: 1px solid white;
+                border-radius: 50%;
+            }
+            .toggled {
+                background-color: yellow;
+            }
 
     canvas {
         border: 2px solid black;
         grid-column: 2 / 3;
         background-color: red;
         margin: 0 auto;
-    }
-    .toggled {
-        background-color: yellow;
     }

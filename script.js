@@ -1,31 +1,34 @@
 "use strict"
-
 const elCanvas = document.querySelector("canvas");
-const flex = document.querySelector(".flex");
-const windowWidth = window.innerWidth;
-const windowHeight = window.innerHeight;
-elCanvas.width = windowWidth * 0.8;
-elCanvas.height = windowHeight * 0.8;
-
-const elPencil = document.getElementById("pencil");
-const toolbar = [elPencil]
-
-
-
+const ctx = elCanvas.getContext("2d");
 if (elCanvas.getContext) {
-    const ctx = elCanvas.getContext("2d");
+    
+    const flex = document.querySelector(".flex");
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    elCanvas.width = windowWidth * 0.8;
+    elCanvas.height = windowHeight * 0.8;
 
-    for (let button of toolbar) {
+    const toolList = document.getElementsByClassName("tool")
+    const toolBar = []
+    console.log(toolList);
+    for (let item of toolList) {
+        toolBar.push(item);    
+    }
+    console.log(toolBar[0]);
+
+    for (let button of toolBar) {
         button.addEventListener("click", toggleButton);
     }
 
     function toggleButton(e) {
-        for (let button of toolbar) {
-            if (toolbar.indexOf(button) != toolbar.indexOf(e.currentTarget) && (button.classList.contains("toggled"))) {
+        for (let button of toolBar) {
+            if (toolBar.indexOf(button) != toolBar.indexOf(e.currentTarget) && (button.classList.contains("toggled"))) {
                 button.classList.remove("toggled");
+                console.log(button.classList);
             }
         }
-        e.target.classList.add("toggled");
+        e.currentTarget.classList.add("toggled");
         let test = `${e.currentTarget.id}Listeners`;
         console.log(test);
         toolListeners[test]();
@@ -39,19 +42,28 @@ if (elCanvas.getContext) {
         });     
         },
         colorListeners: function() {
-
+            
         },
+
+        checkToggle: function(tool) {
+            if (tool.classList.contains("toggled")) {
+                return true;
+            }
+        }
     }
 
     function startLine(e) {
-        ctx.beginPath();
-        let x = calcX(e.pageX);
-        let y = calcY(e.pageY);
-        ctx.moveTo(x, y);
-        elCanvas.addEventListener("pointermove", updateLine);
-        /* 
-        ctx.quadraticCurveTo(e.clientX, e.clientY, 20, 20) */
-    }
+            if (toolListeners.checkToggle(toolBar[0])) {
+                ctx.beginPath();
+                let x = calcX(e.pageX);
+                let y = calcY(e.pageY);
+                ctx.moveTo(x, y);
+                elCanvas.addEventListener("pointermove", updateLine);
+                /* 
+                ctx.quadraticCurveTo(e.clientX, e.clientY, 20, 20) */
+            }
+            
+        }
 
     function updateLine(e) {
         console.log(e.pageX);
@@ -71,9 +83,7 @@ if (elCanvas.getContext) {
     function calcY(y) {
         return y - canvasLimit.y
     }
-
 }
-
 else {
     console.log("Canvas not supported");
 }
