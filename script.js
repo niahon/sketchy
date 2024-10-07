@@ -7,14 +7,42 @@ const windowHeight = window.innerHeight;
 elCanvas.width = windowWidth * 0.8;
 elCanvas.height = windowHeight * 0.8;
 
+const elPencil = document.getElementById("pencil");
+const toolbar = [elPencil]
+
+
+
 if (elCanvas.getContext) {
     const ctx = elCanvas.getContext("2d");
-    
-    elCanvas.addEventListener("pointerdown", startLine);
-    elCanvas.addEventListener("pointerup", () => {
-        elCanvas.removeEventListener("pointermove", updateLine);
-    });     
-    
+
+    for (let button of toolbar) {
+        button.addEventListener("click", toggleButton);
+    }
+
+    function toggleButton(e) {
+        for (let button of toolbar) {
+            if (toolbar.indexOf(button) != toolbar.indexOf(e.currentTarget) && (button.classList.contains("toggled"))) {
+                button.classList.remove("toggled");
+            }
+        }
+        e.target.classList.add("toggled");
+        let test = `${e.currentTarget.id}Listeners`;
+        console.log(test);
+        toolListeners[test]();
+    }
+
+    const toolListeners = {
+        pencilListeners: function() {
+            elCanvas.addEventListener("pointerdown", startLine);
+            elCanvas.addEventListener("pointerup", () => {
+            elCanvas.removeEventListener("pointermove", updateLine);
+        });     
+        },
+        colorListeners: function() {
+
+        },
+    }
+
     function startLine(e) {
         ctx.beginPath();
         let x = calcX(e.pageX);

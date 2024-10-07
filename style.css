@@ -37,3 +37,6 @@ body {
         background-color: red;
         margin: 0 auto;
     }
+    .toggled {
+        background-color: yellow;
+    }
