@@ -2,28 +2,31 @@
 const elCanvas = document.querySelector("canvas");
 const ctx = elCanvas.getContext("2d");
 if (elCanvas.getContext) {
-    
-    const flex = document.querySelector(".flex");
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
     elCanvas.width = windowWidth * 0.8;
     elCanvas.height = windowHeight * 0.8;
 
-    const toolList = document.getElementsByClassName("tool")
-    const toolBar = []
-    console.log(toolList);
-    for (let item of toolList) {
-        toolBar.push(item);    
+    const toolBar = document.getElementsByClassName("tool")
+    const toolList = []
+    for (let item of toolBar) {
+        toolList.push(item);    
     }
-    console.log(toolBar[0]);
+    console.log(toolList[0]);
 
-    for (let button of toolBar) {
+    for (let button of toolList) {
         button.addEventListener("click", toggleButton);
     }
 
+    const colorPicker = document.getElementById("color");
+    let currentColor = colorPicker.value;
+    colorPicker.addEventListener("change", (e) => {
+        currentColor = e.target.value;
+    })
+
     function toggleButton(e) {
-        for (let button of toolBar) {
-            if (toolBar.indexOf(button) != toolBar.indexOf(e.currentTarget) && (button.classList.contains("toggled"))) {
+        for (let button of toolList) {
+            if (toolList.indexOf(button) != toolList.indexOf(e.currentTarget) && (button.classList.contains("toggled"))) {
                 button.classList.remove("toggled");
                 console.log(button.classList);
             }
@@ -53,7 +56,8 @@ if (elCanvas.getContext) {
     }
 
     function startLine(e) {
-            if (toolListeners.checkToggle(toolBar[0])) {
+            if (toolListeners.checkToggle(toolList[0])) {
+                ctx.strokeStyle = currentColor;
                 ctx.beginPath();
                 let x = calcX(e.pageX);
                 let y = calcY(e.pageY);
@@ -66,8 +70,6 @@ if (elCanvas.getContext) {
         }
 
     function updateLine(e) {
-        console.log(e.pageX);
-        console.log(e.pageY);
         let x = calcX(e.pageX);
         let y = calcY(e.pageY);
         ctx.lineTo(x, y);
