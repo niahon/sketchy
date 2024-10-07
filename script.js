@@ -4,8 +4,8 @@ const ctx = elCanvas.getContext("2d");
 if (elCanvas.getContext) {
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
-    elCanvas.width = windowWidth * 0.8;
-    elCanvas.height = windowHeight * 0.8;
+    elCanvas.width = windowWidth * 0.85;
+    elCanvas.height = windowHeight * 0.85;
 
     const toolBar = document.getElementsByClassName("tool")
     const toolList = []
@@ -19,9 +19,14 @@ if (elCanvas.getContext) {
     }
 
     const colorPicker = document.getElementById("color");
-    let currentColor = colorPicker.value;
+    let currentColor = colorPicker.value;   
     colorPicker.addEventListener("change", (e) => {
         currentColor = e.target.value;
+    })
+    const brushSize = document.getElementById("brush-size");
+    let currentSize = 12;
+    brushSize.addEventListener("input", (e) => {
+        currentSize = e.target.value;
     })
 
     function toggleButton(e) {
@@ -58,6 +63,7 @@ if (elCanvas.getContext) {
     function startLine(e) {
             if (toolListeners.checkToggle(toolList[0])) {
                 ctx.strokeStyle = currentColor;
+                ctx.lineWidth = currentSize;
                 ctx.beginPath();
                 let x = calcX(e.pageX);
                 let y = calcY(e.pageY);
