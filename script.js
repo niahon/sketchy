@@ -1,56 +1,67 @@
 "use strict"
 const elCanvas = document.querySelector("canvas");
-const ctx = elCanvas.getContext("2d");
 if (elCanvas.getContext) {
+    // Canvas variables
+    const ctx = elCanvas.getContext("2d");
+    const canvasLimit = elCanvas.getBoundingClientRect();
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
     elCanvas.width = windowWidth * 0.85;
     elCanvas.height = windowHeight * 0.85;
 
+    // Tool variables
     const toolBar = document.getElementsByClassName("tool")
     const toolList = []
+    const colorPicker = document.getElementById("color");
+    const brushSize = document.getElementById("brush-size");
+    const clearBtn = document.getElementById("clear");
+    let currentColor = colorPicker.value; 
+    let currentSize = 12;
+
+    // Tool event listeners
     for (let item of toolBar) {
         toolList.push(item);    
     }
-    console.log(toolList[0]);
 
     for (let button of toolList) {
         button.addEventListener("click", toggleButton);
     }
 
-    const colorPicker = document.getElementById("color");
-    let currentColor = colorPicker.value;   
+    clearBtn.addEventListener("click", () => {
+        ctx.reset();
+    });
+  
     colorPicker.addEventListener("change", (e) => {
         currentColor = e.target.value;
     })
-    const brushSize = document.getElementById("brush-size");
-    let currentSize = 12;
     brushSize.addEventListener("input", (e) => {
         currentSize = e.target.value;
     })
 
     function toggleButton(e) {
-        for (let button of toolList) {
-            if (toolList.indexOf(button) != toolList.indexOf(e.currentTarget) && (button.classList.contains("toggled"))) {
-                button.classList.remove("toggled");
-                console.log(button.classList);
+        let clickedBtn = e.currentTarget;
+        for (let btn of toolList) {
+            if (toolList.indexOf(btn) != toolList.indexOf(clickedBtn) && (toolListeners.checkToggle(btn))) {
+                btn.classList.remove("toggled");
             }
         }
-        e.currentTarget.classList.add("toggled");
-        let test = `${e.currentTarget.id}Listeners`;
-        console.log(test);
-        toolListeners[test]();
+        clickedBtn.classList.add("toggled");
+        let tool = `${e.currentTarget.id}Listeners`;
+        toolListeners[tool]();
     }
 
     const toolListeners = {
         pencilListeners: function() {
-            elCanvas.addEventListener("pointerdown", startLine);
+            elCanvas.addEventListener("pointerdown", brushActions.startLine);
             elCanvas.addEventListener("pointerup", () => {
-            elCanvas.removeEventListener("pointermove", updateLine);
-        });     
+                elCanvas.removeEventListener("pointermove", brushActions.updateLine);
+            });     
         },
-        colorListeners: function() {
-            
+        shapeListeners: function() {
+            elCanvas.addEventListener("pointerdown", createCircle);
+            elCanvas.addEventListener("pointerup", () => {
+                elCanvas.removeEventListener("pointermove", updateCircle);
+            });
         },
 
         checkToggle: function(tool) {
@@ -60,7 +71,16 @@ if (elCanvas.getContext) {
         }
     }
 
-    function startLine(e) {
+    // Tool actions
+    function calcX(x) {
+        return ((x - windowWidth * 0.05) - ((windowWidth * 0.9 - elCanvas.width) / 2 ))
+    }
+    function calcY(y) {
+        return y - canvasLimit.y
+    }
+
+    const brushActions = {
+        startLine: function(e) {
             if (toolListeners.checkToggle(toolList[0])) {
                 ctx.strokeStyle = currentColor;
                 ctx.lineWidth = currentSize;
@@ -68,30 +88,52 @@ if (elCanvas.getContext) {
                 let x = calcX(e.pageX);
                 let y = calcY(e.pageY);
                 ctx.moveTo(x, y);
-                elCanvas.addEventListener("pointermove", updateLine);
-                /* 
-                ctx.quadraticCurveTo(e.clientX, e.clientY, 20, 20) */
+                elCanvas.addEventListener("pointermove", brushActions.updateLine);
             }
-            
+        },
+        updateLine: function(e) {
+            let x = calcX(e.pageX);
+            let y = calcY(e.pageY);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+        },
+    }
+
+    let circle;
+    function createCircle(e) {
+        circle = new Circle(true, calcX(e.pageX), calcY(e.pageY));
+        circle.setPosition();
+        elCanvas.addEventListener("pointermove", updateCircle)
+    }
+
+     function updateCircle(e) {
+        circle.updatePosition(calcX(e.pageX), calcY(e.pageY));
+        circle.deletePosition(calcX(e.pageX), calcY(e.pageY));
+    }
+
+    class Circle {
+        constructor(isPointerActive, x, y) {
+            this.isPointerActive = isPointerActive
+            this.initialX = x;
+            this.initialY = y;
+            this.prevX = 0;
+            this.prevY = 0;
+            this.radius = 10;
+            this.counter = 0;
         }
 
-    function updateLine(e) {
-        let x = calcX(e.pageX);
-        let y = calcY(e.pageY);
-        ctx.lineTo(x, y);
-        ctx.closePath;
-        ctx.stroke();
+        setPosition() {
+        }
+
+        deletePosition(currentX, currentY) {
+        }
+        updatePosition(currentX, currentY) {
+        }
+
     }
 
-    const canvasLimit = elCanvas.getBoundingClientRect();
-
-    function calcX(x) {
-        return ((x - windowWidth * 0.05) - ((windowWidth * 0.9 - elCanvas.width) / 2 ))
-    }
-    function calcY(y) {
-        return y - canvasLimit.y
-    }
 }
+
 else {
     console.log("Canvas not supported");
 }
