@@ -57,13 +57,6 @@ if (elCanvas.getContext) {
                 elCanvas.removeEventListener("pointermove", brushActions.updateLine);
             });     
         },
-        shapeListeners: function() {
-            elCanvas.addEventListener("pointerdown", createCircle);
-            elCanvas.addEventListener("pointerup", () => {
-                elCanvas.removeEventListener("pointermove", updateCircle);
-            });
-        },
-
         checkToggle: function(tool) {
             if (tool.classList.contains("toggled")) {
                 return true;
@@ -99,38 +92,6 @@ if (elCanvas.getContext) {
         },
     }
 
-    let circle;
-    function createCircle(e) {
-        circle = new Circle(true, calcX(e.pageX), calcY(e.pageY));
-        circle.setPosition();
-        elCanvas.addEventListener("pointermove", updateCircle)
-    }
-
-     function updateCircle(e) {
-        circle.updatePosition(calcX(e.pageX), calcY(e.pageY));
-        circle.deletePosition(calcX(e.pageX), calcY(e.pageY));
-    }
-
-    class Circle {
-        constructor(isPointerActive, x, y) {
-            this.isPointerActive = isPointerActive
-            this.initialX = x;
-            this.initialY = y;
-            this.prevX = 0;
-            this.prevY = 0;
-            this.radius = 10;
-            this.counter = 0;
-        }
-
-        setPosition() {
-        }
-
-        deletePosition(currentX, currentY) {
-        }
-        updatePosition(currentX, currentY) {
-        }
-
-    }
 
 }
 
