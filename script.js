@@ -6,8 +6,8 @@ if (elCanvas.getContext) {
     const canvasLimit = elCanvas.getBoundingClientRect();
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
-    elCanvas.width = windowWidth * 0.85;
-    elCanvas.height = windowHeight * 0.85;
+    elCanvas.width = windowWidth * 0.9;
+    elCanvas.height = windowHeight * 0.86;
 
     // Tool variables
     const toolBar = document.getElementsByClassName("tool")
